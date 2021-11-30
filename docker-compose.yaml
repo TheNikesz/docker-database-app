@@ -24,7 +24,6 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_DATABASE: 'database'
     volumes:
       - ./mysql:/var/lib/mysql
     networks:
@@ -32,10 +31,10 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
+    links:
+      - 'mysql:db'
     ports:
       - 6001:80
-    links:
-      - 'mysql'
     networks:
       - backend
 
