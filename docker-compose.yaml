@@ -1,46 +1,62 @@
+# Wybor wersji
 version: '3'
 
+# Definicja serwisow
 services:
 
   nginx:
+    # Tworzenie kontenera na podstawie Dockerfile
     build:
       context: ./build/nginx
+    # Mapowanie portu
     ports:
       - 6666:80
+    # Ustawienie wolumenu
     volumes:
       - ./app:/app
+    # Podlaczenie do sieci
     networks:
       - frontend
       - backend
 
   php:
-    build: 
-      context: ./build/php
+    # Tworzenie kontenera na podstawie obrazu
+    image: php:8-fpm
+    # Ustawienie wolumenu
     volumes:
       - ./app:/app
+    # Podlaczenie do sieci
     networks:
       - backend
 
   mysql:
-    build:
-      context: ./build/mysql
+    # Tworzenie kontenera na podstawie obrazu
+    image: mysql:latest
+    # Ustawienie zmiennej srodowiskowej
     environment:
+      # Ustawienie hasla dla uzytkownika root
       MYSQL_ROOT_PASSWORD: 'password'
+    # Ustawienie wolumenu
     volumes:
       - ./database:/var/lib/mysql
+    # Podlaczenie do sieci
     networks:
       - backend
 
   phpmyadmin:
-    build: 
-      context: ./build/phpmyadmin
+    # Tworzenie kontenera na podstawie obrazu
+    image: phpmyadmin/phpmyadmin:latest
+    # Polaczenie z baza danych
     links:
       - 'mysql:db'
+    # Mapowanie portu
     ports:
       - 6001:80
+    # Podlaczenie do sieci
     networks:
       - backend
 
+# Tworzenie sieci
 networks:
   frontend:
   backend:
